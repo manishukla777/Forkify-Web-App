@@ -55,7 +55,7 @@ elements.searchResPages.addEventListener('click', e => {
 // RECIPE CONTROLLER
 
 const controlRecipe = async () => {
-    const id = window.location.hash.replace('#', '');
+    let id = window.location.hash.replace('#', '');
 
     if (id) {
 
