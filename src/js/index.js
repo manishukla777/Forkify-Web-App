@@ -14,22 +14,22 @@ const state = {};
 
 // SEARCH CONTROLLER
 const controlSearch = async () => {
-    
+
     const query = searchView.getInput();
 
     if (query) {
-    
+
         state.search = new Search(query);
 
-    
+
         searchView.clearInput();
         searchView.clearResults();
         renderLoader(elements.searchRes);
 
         try {
-    
+
             await state.search.getResults();
-    
+
             clearLoader();
             searchView.renderResults(state.search.result);
         } catch (err) {
@@ -63,21 +63,21 @@ const controlRecipe = async () => {
     let id = window.location.hash.replace('#', '');
 
     if (id) {
-    
-        recipeView.clearRecipe();
-        renderLoader(elements.recipe);
-
-        if (state.search) searchView.highlightSelected(id);
-
-        state.recipe = new Recipe(id);
 
         try {
+            recipeView.clearRecipe();
+            renderLoader(elements.recipe);
+
+            if (state.search) searchView.highlightSelected(id);
+
+            state.recipe = new Recipe(id);
+
             await state.recipe.getRecipe();
             state.recipe.parseIngredients();
 
             state.recipe.calcTime();
             state.recipe.calcServings();
-    
+
             clearLoader();
             recipeView.renderRecipe(
                 state.recipe,
@@ -85,16 +85,16 @@ const controlRecipe = async () => {
             );
 
         } catch (err) {
-            console.log(err);
-            alert('Error processing recipe!');
+            clearLoader();
+            console.log('Error processing recipe!');
         }
     }
 };
- 
+
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 
- 
+
 // LIST CONTROLLER
 
 const controlList = () => {
@@ -145,7 +145,7 @@ const controlLike = () => {
         likesView.renderLike(newLike);
 
     } else {
-    
+
         state.likes.deleteLike(currentID);
 
         likesView.toggleLikeBtn(false);
@@ -157,7 +157,7 @@ const controlLike = () => {
 
 window.addEventListener('load', () => {
     state.likes = new Likes();
-    
+
     state.likes.readStorage();
 
     likesView.toggleLikeMenu(state.likes.getNumLikes());
@@ -178,7 +178,7 @@ elements.recipe.addEventListener('click', e => {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
     } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
-    
+
         controlList();
     } else if (e.target.matches('.recipe__love, .recipe__love *')) {
 
@@ -189,6 +189,3 @@ elements.recipe.addEventListener('click', e => {
 
 
 //webpack-dev-server --mode development --open
-
-
-
