@@ -86,7 +86,7 @@ const controlRecipe = async () => {
 
         } catch (err) {
             clearLoader();
-            console.log('Error in processing recipe!');
+            console.log(`Error in processing recipe! ${err}`);
         }
     }
 };
