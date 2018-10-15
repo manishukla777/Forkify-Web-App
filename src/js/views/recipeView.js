@@ -1,10 +1,9 @@
-import {elements} from './base';
-import {Fraction} from 'fractional';
+import { elements } from './base';
+import { Fraction } from 'fractional';
 
 export const clearRecipe = () => {
     elements.recipe.innerHTML = '';
-}
-
+};
 const formatCount = count => {
     if (count) {
         const newCount = Math.round(count * 10000) / 10000;
@@ -16,15 +15,15 @@ const formatCount = count => {
             const fr = new Fraction(newCount);
             return `${fr.numerator}/${fr.denominator}`;
         } else {
-            const fr = new Fraction(newCount);
+            const fr = new Fraction(newCount - int);
             return `${int} ${fr.numerator}/${fr.denominator}`;
         }
     }
     return '?';
-}
+};
 
 const createIngredient = ingredient => `
-    <li class="recipe__item"> 
+    <li class="recipe__item">
         <svg class="recipe__icon">
             <use href="img/icons.svg#icon-check"></use>
         </svg>
@@ -39,10 +38,10 @@ const createIngredient = ingredient => `
 export const renderRecipe = (recipe, isLiked) => {
     const markup = `
         <figure class="recipe__fig">
-        <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
-        <h1 class="recipe__title">
-            <span>${recipe.title}</span>
-        </h1>
+            <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
+            <h1 class="recipe__title">
+                <span>${recipe.title}</span>
+            </h1>
         </figure>
 
         <div class="recipe__details">
@@ -81,14 +80,10 @@ export const renderRecipe = (recipe, isLiked) => {
             </button>
         </div>
 
-
-
         <div class="recipe__ingredients">
             <ul class="recipe__ingredient-list">
-
                 ${recipe.ingredients.map(el => createIngredient(el)).join('')}
-
-            </ul>  
+            </ul>
 
             <button class="btn-small recipe__btn recipe__btn--add">
                 <svg class="search__icon">
@@ -109,10 +104,10 @@ export const renderRecipe = (recipe, isLiked) => {
                 <svg class="search__icon">
                     <use href="img/icons.svg#icon-triangle-right"></use>
                 </svg>
+
             </a>
         </div>
     `;
-
     elements.recipe.insertAdjacentHTML('afterbegin', markup);
 };
 
@@ -123,4 +118,4 @@ export const updateServingsIngredients = recipe => {
     countElements.forEach((el, i) => {
         el.textContent = formatCount(recipe.ingredients[i].count);
     });
-}
+};

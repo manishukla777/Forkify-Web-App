@@ -1,33 +1,32 @@
 import axios from 'axios';
-import {key, proxy} from '../config';
-import { error } from 'util';
+import { key, proxy } from '../config';
 
 export default class Recipe {
-
     constructor(id) {
         this.id = id;
     }
 
     async getRecipe() {
         try {
-            const res = await axios(`https://www.food2fork.com/api/get?key=${key}&rId=${this.id}`);
+            const res = await axios(`${proxy}http://food2fork.com/api/get?key=${key}&rId=${this.id}`);
             this.title = res.data.recipe.title;
             this.author = res.data.recipe.publisher;
             this.img = res.data.recipe.image_url;
             this.url = res.data.recipe.source_url;
             this.ingredients = res.data.recipe.ingredients;
         } catch (error) {
-            alert(error);
+            console.log(error);
+            alert('Something went wrong :(');
         }
     }
 
-    calcTime () {
+    calcTime() {
         const numIng = this.ingredients.length;
         const periods = Math.ceil(numIng / 3);
         this.time = periods * 15;
     }
 
-    calcServings () {
+    calcServings() {
         this.servings = 4;
     }
 
@@ -48,10 +47,9 @@ export default class Recipe {
             const unitIndex = arrIng.findIndex(el2 => units.includes(el2));
 
             let objIng;
-
             if (unitIndex > -1) {
                 const arrCount = arrIng.slice(0, unitIndex);
-
+                
                 let count;
                 if (arrCount.length === 1) {
                     count = eval(arrIng[0].replace('-', '+'));
@@ -65,24 +63,24 @@ export default class Recipe {
                     ingredient: arrIng.slice(unitIndex + 1).join(' ')
                 };
 
-
-            } else if (parseInt(arrIng[0],10)) {
+            } else if (parseInt(arrIng[0], 10)) {
                 objIng = {
                     count: parseInt(arrIng[0], 10),
                     unit: '',
                     ingredient: arrIng.slice(1).join(' ')
-                };
+                }
             } else if (unitIndex === -1) {
                 objIng = {
                     count: 1,
                     unit: '',
                     ingredient
-                };
+                }
             }
+
             return objIng;
         });
         this.ingredients = newIngredients;
-    };
+    }
 
     updateServings (type) {
         const newServings = type === 'dec' ? this.servings - 1 : this.servings + 1;
@@ -91,8 +89,6 @@ export default class Recipe {
             ing.count *= (newServings / this.servings);
         });
 
-        console.log('updateServings',this.ingredients);
-
         this.servings = newServings;
-    };
-}  
+    }
+}
